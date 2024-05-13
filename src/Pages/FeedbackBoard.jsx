@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import MobileMenu from "../Components/MobileMenu";
+import data from "../../data.json"
+
 
 const FeedbackBoard = () => {
     const [selectedSort, setSelectedSort] = useState("Most Upvotes");
@@ -52,6 +54,29 @@ const FeedbackBoard = () => {
                     <p className="text-white font-bold">+ Add Feedback</p>
                 </Link>
             </div>
+            <ul className="grid gap-6 p-6"> 
+                {Array.from(data.productRequests).map((productRequest) => {
+                    const categoryToUpperCase = productRequest.category.charAt(0).toUpperCase() + productRequest.category.slice(1);
+                    return (
+                    <li className="flex flex-col gap-6 p-8 bg-white rounded-lg" key={productRequest.id}>
+                        <div className="flex flex-col gap-2 text-sm">
+                            <h2 className="text-text1 font-bold">{productRequest.title}</h2>
+                            <p className="text-slate-500">{productRequest.description}</p>
+                            <p className="w-fit px-4 py-1 text-text2 font-bold bg-background1 rounded-lg">{categoryToUpperCase}</p>
+                        </div>
+                        
+                        <div className="flex justify-between">
+                            <button className="flex items-center gap-2 text-text1 text-sm px-4 py-1 font-bold bg-background1 rounded-lg"><img src="./shared/icon-arrow-up.svg" alt=" " /> {productRequest.upvotes}</button>
+                            <div className="flex items-center gap-2">
+                                <img src="./shared/icon-comments.svg" alt=" " />
+                                <p className="text-sm font-bold">{productRequest.comments ? productRequest.comments.length : 0}</p>
+                            </div>
+                        </div>
+                    </li>
+
+                    )
+                })}
+            </ul>
         </main>
         </>
     )

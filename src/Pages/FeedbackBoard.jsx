@@ -1,22 +1,46 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import MobileMenu from "../Components/MobileMenu";
 import data from "../../data.json"
 
 
+
+
 const FeedbackBoard = () => {
 
     const [selectedSort, setSelectedSort] = useState("Most Upvotes");
+
+    const selectionHandler = (selection) => {
+        setSelectedSort(selection);
+
+        const noCommentRequests = data.productRequests.filter((request) => !request.comments);
+        const commentedRequest = data.productRequests.filter((request) => request.comments);
+         
+        switch(selection){
+            case "Most Upvotes": 
+                return commentedRequest.sort((A, B) => B.upvotes - A.upvotes).concat(noCommentRequests);
+            case "Least Upvotes":
+                return commentedRequest.sort((A, B) => A.upvotes - B.upvotes).concat(noCommentRequests);
+            case "Most Comments":
+                return commentedRequest.sort((A, B) => B.comments.length - A.comments.length).concat(noCommentRequests);
+            case "Least Comments":
+                return noCommentRequests.concat(commentedRequest.sort((A, B) => A.comments.length - B.comments.length));
+            default:
+                return commentedRequest.sort((A, B) => B.upvotes - A.upvotes).concat(noCommentRequests);
+        }
+    }
+
+
     const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
     const [dropDownIsOpen, setDropdownIsOpen] = useState(false);
+    const suggestions = useMemo(() => selectionHandler(selectedSort), [selectedSort]);
     const mostUpvotesRef = useRef("");
     const leastUpvotesRef = useRef("");
     const mostCommentsRef = useRef("");
     const leastCommentsRef = useRef("");
 
-    const suggestions = data.productRequests.filter((suggestion) => suggestion.status === "suggestion");
-    
+
     useEffect(() => { //tailwind doesn't have a way to change the <body> styles like styledComponents 
                     //this shouldn't be done, it's an exception
         if(mobileMenuIsOpen === false){ 
@@ -25,7 +49,7 @@ const FeedbackBoard = () => {
             document.querySelector("body").style.overflowY = "hidden";
         }
         
-    }, [mobileMenuIsOpen])
+    }, [mobileMenuIsOpen]);
 
     return (
         <>
@@ -47,19 +71,19 @@ const FeedbackBoard = () => {
                     <img className={dropDownIsOpen ? 'rotate-180' : ''} src="./shared/icon-arrow-down.svg" alt=" " />
                     <ul className={`${dropDownIsOpen ? 'block' : 'hidden'} absolute top-11 w-64 bg-white rounded-lg shadow`}>
                        <li className="flex justify-between items-center px-6 py-3 text-slate-500 border-b">
-                            <button className={`${selectedSort === mostUpvotesRef.current.innerText && 'text-purple'} text-base`} ref={mostUpvotesRef} onClick={(e) => {setSelectedSort(e.target.innerText)}}>Most Upvotes</button>
+                            <button className={`${selectedSort === mostUpvotesRef.current.innerText && 'text-purple'} text-base`} ref={mostUpvotesRef} onClick={(e) => {selectionHandler(e.target.innerText)}}>Most Upvotes</button>
                             <img className={`${selectedSort === mostUpvotesRef.current.innerText ? 'block' : 'hidden'}`} src="./shared/icon-check.svg" alt=" " />
                         </li>
                         <li className="flex justify-between items-center px-6 py-3 text-slate-500 border-b">
-                            <button className={`${selectedSort === leastUpvotesRef.current.innerText && 'text-purple'} text-base`} ref={leastUpvotesRef} onClick={(e) => {setSelectedSort(e.target.innerText)}}>Least Upvotes</button>
+                            <button className={`${selectedSort === leastUpvotesRef.current.innerText && 'text-purple'} text-base`} ref={leastUpvotesRef} onClick={(e) => {selectionHandler(e.target.innerText)}}>Least Upvotes</button>
                             <img className={`${selectedSort === leastUpvotesRef.current.innerText ? 'block' : 'hidden'}`} src="./shared/icon-check.svg" alt=" " />
                         </li>
                         <li className="flex justify-between items-center px-6 py-3 text-slate-500 border-b">
-                            <button className={`${selectedSort === mostCommentsRef.current.innerText && 'text-purple'} text-base`} ref={mostCommentsRef} onClick={(e) => {setSelectedSort(e.target.innerText)}}>Most Comments</button>
+                            <button className={`${selectedSort === mostCommentsRef.current.innerText && 'text-purple'} text-base`} ref={mostCommentsRef} onClick={(e) => {selectionHandler(e.target.innerText)}}>Most Comments</button>
                             <img className={`${selectedSort === mostCommentsRef.current.innerText ? 'block' : 'hidden'}`} src="./shared/icon-check.svg" alt=" " />
                         </li>
                         <li className="flex justify-between items-center px-6 py-3 text-slate-500">
-                            <button className={`${selectedSort === leastCommentsRef.current.innerText && 'text-purple'} text-base`} ref={leastCommentsRef} onClick={(e) => {setSelectedSort(e.target.innerText)}}>Least Comments</button>
+                            <button className={`${selectedSort === leastCommentsRef.current.innerText && 'text-purple'} text-base`} ref={leastCommentsRef} onClick={(e) => {selectionHandler(e.target.innerText)}}>Least Comments</button>
                             <img className={`${selectedSort === leastCommentsRef.current.innerText ? 'block' : 'hidden'}`} src="./shared/icon-check.svg" alt=" " />
                         </li>
                     </ul>

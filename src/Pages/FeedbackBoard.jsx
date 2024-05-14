@@ -1,11 +1,8 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import MobileMenu from "../Components/MobileMenu";
 import data from "../../data.json"
-
-
-
 
 const FeedbackBoard = () => {
 
@@ -34,7 +31,7 @@ const FeedbackBoard = () => {
 
     const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
     const [dropDownIsOpen, setDropdownIsOpen] = useState(false);
-    const suggestions = useMemo(() => selectionHandler(selectedSort), [selectedSort]);
+    const [suggestions, setSuggestions] = useState([]);
     const mostUpvotesRef = useRef("");
     const leastUpvotesRef = useRef("");
     const mostCommentsRef = useRef("");
@@ -51,6 +48,8 @@ const FeedbackBoard = () => {
         
     }, [mobileMenuIsOpen]);
 
+    useEffect(() => setSuggestions(selectionHandler("Most Upvotes")), []);
+
     return (
         <>
         <header className="flex justify-between items-center p-4 bg-mobileHeaderBg bg-cover">
@@ -63,7 +62,7 @@ const FeedbackBoard = () => {
                 : <img src="./shared/mobile/icon-hamburger.svg" alt=" " />}
             </div>
         </header>
-        {mobileMenuIsOpen && createPortal(<MobileMenu /> ,document.getElementById("mobile-menu-portal"))}
+        {mobileMenuIsOpen && createPortal(<MobileMenu selectionHandler={selectionHandler} suggestions={suggestions} setSuggestions={setSuggestions}/> ,document.getElementById("mobile-menu-portal"))}
         <main>
             <div className="flex justify-between items-center p-4 text-sm bg-background2"  onMouseLeave={() => {setDropdownIsOpen(false)}}>
                 <div className="relative flex items-center gap-2 w-fit" onMouseEnter={() => {setDropdownIsOpen(true)}}>
@@ -92,7 +91,7 @@ const FeedbackBoard = () => {
                     <p className="text-white font-bold">+ Add Feedback</p>
                 </Link>
             </div>
-            <ul className="grid gap-6 p-6"> 
+            <ul className="grid gap-6 p-4"> 
                 {suggestions.map((suggestion) => {
                     const categoryToUpperCase = suggestion.category.charAt(0).toUpperCase() + suggestion.category.slice(1);
                     return (
@@ -111,7 +110,6 @@ const FeedbackBoard = () => {
                             </div>
                         </div>
                     </li>
-
                     )
                 })}
             </ul>

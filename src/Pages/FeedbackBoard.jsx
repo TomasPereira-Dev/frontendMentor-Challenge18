@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import MobileMenu from "../Components/MobileMenu";
-import data from "../../data.json"
+import MobileMenu from "../Components/MobileMenu.jsx";
+import AddFeedbackBtn from "../Components/AddFeedbackBtn.jsx";
+import data from "../../data.json";
 
 const FeedbackBoard = () => {
 
@@ -16,18 +17,17 @@ const FeedbackBoard = () => {
          
         switch(selection){
             case "Most Upvotes": 
-                return commentedRequest.sort((A, B) => B.upvotes - A.upvotes).concat(noCommentRequests);
+                return setSuggestions(commentedRequest.sort((A, B) => B.upvotes - A.upvotes).concat(noCommentRequests));
             case "Least Upvotes":
-                return commentedRequest.sort((A, B) => A.upvotes - B.upvotes).concat(noCommentRequests);
+                return setSuggestions(commentedRequest.sort((A, B) => A.upvotes - B.upvotes).concat(noCommentRequests));
             case "Most Comments":
-                return commentedRequest.sort((A, B) => B.comments.length - A.comments.length).concat(noCommentRequests);
+                return setSuggestions(commentedRequest.sort((A, B) => B.comments.length - A.comments.length).concat(noCommentRequests));
             case "Least Comments":
-                return noCommentRequests.concat(commentedRequest.sort((A, B) => A.comments.length - B.comments.length));
+                return setSuggestions(noCommentRequests.concat(commentedRequest.sort((A, B) => A.comments.length - B.comments.length)));
             default:
-                return commentedRequest.sort((A, B) => B.upvotes - A.upvotes).concat(noCommentRequests);
+                return setSuggestions(commentedRequest.sort((A, B) => B.upvotes - A.upvotes).concat(noCommentRequests));
         }
     }
-
 
     const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
     const [dropDownIsOpen, setDropdownIsOpen] = useState(false);
@@ -48,11 +48,13 @@ const FeedbackBoard = () => {
         
     }, [mobileMenuIsOpen]);
 
-    useEffect(() => setSuggestions(selectionHandler("Most Upvotes")), []);
+    useEffect(()=> {
+        selectionHandler("Most Upvotes")
+    }, [])
 
     return (
         <>
-        <header className="flex justify-between items-center p-4 bg-mobileHeaderBg bg-cover">
+        <header className="flex justify-between items-center p-6 bg-mobileHeaderBg bg-cover">
             <div>
                 <p className="text-white font-bold">Frontend Mentor</p>
                 <p className="text-xs text-white font-bold">Feedback Board</p>
@@ -64,11 +66,11 @@ const FeedbackBoard = () => {
         </header>
         {mobileMenuIsOpen && createPortal(<MobileMenu selectionHandler={selectionHandler} suggestions={suggestions} setSuggestions={setSuggestions}/> ,document.getElementById("mobile-menu-portal"))}
         <main>
-            <div className="flex justify-between items-center p-4 text-sm bg-background2"  onMouseLeave={() => {setDropdownIsOpen(false)}}>
+            <div className="flex justify-between items-center px-6 py-2 text-sm bg-background2"  onMouseLeave={() => {setDropdownIsOpen(false)}}>
                 <div className="relative flex items-center gap-2 w-fit" onMouseEnter={() => {setDropdownIsOpen(true)}}>
                     <p className="text-white">Sort by: <span className="font-bold">{selectedSort}</span></p>
                     <img className={dropDownIsOpen ? 'rotate-180' : ''} src="./shared/icon-arrow-down.svg" alt=" " />
-                    <ul className={`${dropDownIsOpen ? 'block' : 'hidden'} absolute top-11 w-64 bg-white rounded-lg shadow`}>
+                    <ul className={`${dropDownIsOpen ? 'block' : 'hidden'} absolute top-[40px] w-64 bg-white rounded-lg shadow`}>
                        <li className="flex justify-between items-center px-6 py-3 text-slate-500 border-b">
                             <button className={`${selectedSort === mostUpvotesRef.current.innerText && 'text-purple'} text-base`} ref={mostUpvotesRef} onClick={(e) => {selectionHandler(e.target.innerText)}}>Most Upvotes</button>
                             <img className={`${selectedSort === mostUpvotesRef.current.innerText ? 'block' : 'hidden'}`} src="./shared/icon-check.svg" alt=" " />
@@ -87,15 +89,13 @@ const FeedbackBoard = () => {
                         </li>
                     </ul>
                 </div>
-                <Link className="px-4 py-2 bg-purple rounded-lg">
-                    <p className="text-white font-bold">+ Add Feedback</p>
-                </Link>
+                <AddFeedbackBtn />
             </div>
-            <ul className="grid gap-6 p-4"> 
-                {suggestions.map((suggestion) => {
+            <ul className="grid gap-6 p-6"> 
+                {suggestions.length ? suggestions.map((suggestion) => {
                     const categoryToUpperCase = suggestion.category.charAt(0).toUpperCase() + suggestion.category.slice(1);
                     return (
-                    <li className="flex flex-col gap-6 p-8 bg-white rounded-lg" key={suggestion.id}>
+                    <li className="flex flex-col gap-6 p-6 bg-white rounded-lg" key={suggestion.id}>
                         <div className="flex flex-col gap-2 text-sm">
                             <h2 className="text-text1 font-bold">{suggestion.title}</h2>
                             <p className="text-slate-500">{suggestion.description}</p>
@@ -111,7 +111,16 @@ const FeedbackBoard = () => {
                         </div>
                     </li>
                     )
-                })}
+                }) :
+                    <div className="flex flex-col justify-center items-center px-8 py-24 bg-white rounded-lg">
+                        <img className="mb-10" src="./suggestions/illustration-empty.svg" alt=" " />
+                        <div className="mb-6">
+                            <h2 className="text-lg text-text1 text-center">There is no feedback yet.</h2>
+                            <p className="text-sm text-slate-500 text-center">Got a suggestion? Found a bug that needs to be squashed? We love hearing about new ideas to improve our app.</p>
+                        </div>
+                        <AddFeedbackBtn />
+                    </div>
+                }
             </ul>
         </main>
         </>

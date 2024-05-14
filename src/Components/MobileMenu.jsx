@@ -25,7 +25,6 @@ const MobileMenu = ({selectionHandler , suggestions ,setSuggestions}) => {
         }else{
             setSuggestions(selectionHandler("Most Upvotes")); 
         }
-
     }
 
     return (

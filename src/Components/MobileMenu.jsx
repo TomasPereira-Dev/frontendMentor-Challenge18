@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import data from "../../data.json";
 
 const MobileMenu = () => {
+    const planned = data.productRequests.filter((request) => request.status === "planned").length;
+    const inProgress = data.productRequests.filter((request) => request.status === "in-progress").length;
+    const live = data.productRequests.filter((request) => request.status === "live").length;
+
+
     return (
         <div className="absolute top-[4.5rem] flex justify-end w-full h-full bg-black/50">
             <div className="flex flex-col p-6 gap-8 w-3/4 bg-background1">
@@ -24,9 +30,9 @@ const MobileMenu = () => {
                         <Link className="text-text2 hover:underline">View</Link>
                     </div>
                     <ul className="flex flex-col gap-2 text-slate-500">
-                        <li className="flex justify-between items-center before:absolute before:content-[''] before:p-1 before:bg-orange before:rounded-full"><p className="ml-4">Planned</p> <p>{"data"}</p></li>
-                        <li className="flex justify-between items-center before:absolute before:content-[''] before:p-1 before:bg-purple before:rounded-full" ><p className="ml-4">In Progress</p> <p>{"data"}</p></li>
-                        <li className="flex justify-between items-center before:absolute before:content-[''] before:p-1 before:bg-blue before:rounded-full"><p className="ml-4">Live</p> <p>{"data"}</p></li>
+                        <li className="flex justify-between items-center before:absolute before:content-[''] before:p-1 before:bg-orange before:rounded-full"><p className="ml-4">Planned</p> <p className="font-bold">{planned}</p></li>
+                        <li className="flex justify-between items-center before:absolute before:content-[''] before:p-1 before:bg-purple before:rounded-full" ><p className="ml-4">In Progress</p> <p className="font-bold">{inProgress}</p></li>
+                        <li className="flex justify-between items-center before:absolute before:content-[''] before:p-1 before:bg-blue before:rounded-full"><p className="ml-4">Live</p> <p className="font-bold">{live}</p></li>
                     </ul>
                 </div>
             </div>

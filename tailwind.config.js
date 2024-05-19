@@ -21,6 +21,7 @@ export default {
       },
       backgroundImage: {
         "mobileHeaderBg": "url(./suggestions/mobile/background-header.png)",
+        "tabletHeaderBg": "url(./suggestions/tablet/background-header.png)",
         "headerBg": "url(./suggestions/desktop/background-header.png)"
       }
     },

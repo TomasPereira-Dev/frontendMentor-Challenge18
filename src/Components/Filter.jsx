@@ -24,7 +24,7 @@ const Filter = ({setSuggestions}) => {
     useEffect(() => {setSelectedFilter("All")}, []);
 
     return(
-        <div className="flex flex-wrap gap-x-2 gap-y-4 py-6 pr-6 pl-4 bg-white rounded-lg">
+        <div className="flex flex-wrap gap-x-2 gap-y-4 py-6 pr-6 pl-4 bg-white rounded-lg lg:pl-6">
             <button className={`${selectedFilter == allBtnRef.current.textContent ? 'text-white bg-background3' : 'text-text2 bg-background1'} text-sm px-4 py-1 font-bold rounded-xl`} ref={allBtnRef} onClick={(e) => {selectedFilterHandler(e.target.innerText)} }>All</button>
             <button className={`${selectedFilter == uiBtnRef.current.textContent ? 'text-white bg-background3' : 'text-text2 bg-background1'} text-sm px-4 py-1 font-bold rounded-xl`} ref={uiBtnRef} onClick={(e) => {selectedFilterHandler(e.target.innerText)} }>UI</button>
             <button className={`${selectedFilter == uxBtnRef.current.textContent ? 'text-white bg-background3' : 'text-text2 bg-background1'} text-sm px-4 py-1 font-bold rounded-xl`} ref={uxBtnRef} onClick={(e) => {selectedFilterHandler(e.target.innerText)} }>UX</button>

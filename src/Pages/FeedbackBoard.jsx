@@ -67,14 +67,14 @@ const FeedbackBoard = () => {
                 : <img src="./shared/mobile/icon-hamburger.svg" alt=" " />}
             </div>
         </header>
-        <div className="hidden grid-cols-3 gap-2 px-8 my-8 mt-16 mb-12 md:grid lg:hidden">
+        <div className="hidden grid-cols-3 gap-2 px-8 my-8 mt-16 mb-12 md:grid xl:hidden">
             <LogoCard />
             <Filter setSuggestions={setSuggestions} selectionHandler={selectionHandler} />
             <RoadmapPreview />
         </div>
         {mobileMenuIsOpen && createPortal(<MobileMenu selectionHandler={selectionHandler} setSuggestions={setSuggestions}/> ,document.getElementById("mobile-menu-portal"))}
-        <main className="md:px-8 lg:flex lg:justify-center lg:gap-8 lg:my-16">
-            <div className="hidden self-start w-[20%] gap-2 lg:grid ">
+        <main className="md:px-8 lg:gap-8 lg:my-16 xl:flex xl:justify-center">
+            <div className="hidden self-start w-[20%] gap-2 xl:grid">
                 <LogoCard />
                 <Filter setSuggestions={setSuggestions} selectionHandler={selectionHandler} />
                 <RoadmapPreview />

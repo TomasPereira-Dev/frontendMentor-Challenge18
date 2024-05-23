@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import MobileMenu from "../Components/MobileMenu.jsx";
 import AddFeedbackBtn from "../Components/AddFeedbackBtn.jsx";
 import LogoCard from "../Components/LogoCard.jsx";
@@ -74,13 +75,13 @@ const FeedbackBoard = () => {
         </div>
         {mobileMenuIsOpen && createPortal(<MobileMenu selectionHandler={selectionHandler} setSuggestions={setSuggestions}/> ,document.getElementById("mobile-menu-portal"))}
         <main className="md:px-8 lg:gap-8 lg:my-16 xl:flex xl:justify-center">
-            <div className="hidden self-start w-[20%] gap-2 xl:grid">
+            <div className="hidden self-start w-[35%] gap-2 xl:grid">
                 <LogoCard />
                 <Filter setSuggestions={setSuggestions} selectionHandler={selectionHandler} />
                 <RoadmapPreview />
             </div>
 
-            <div>
+            <div className="w-full">
                 <div className="flex justify-between p-6 py-2 text-sm bg-background2 md:rounded-lg md:p-4"  onMouseLeave={() => {setDropdownIsOpen(false)}}>
                     <div className="flex gap-4">
                         <div className="hidden items-center gap-2 md:flex">
@@ -114,18 +115,18 @@ const FeedbackBoard = () => {
                 </div>
                 <ul className="grid gap-6 p-6 md:px-0"> 
                     {suggestions.length ? suggestions.map((suggestion) => {
-                        const categoryToUpperCase = suggestion.category.charAt(0).toUpperCase() + suggestion.category.slice(1);
+                           const categoryToUpperCase = suggestion.category.charAt(0).toUpperCase() + suggestion.category.slice(1);
                         return (
-                        <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion.id}>
+                            <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion.id}>
                             <div className="flex flex-col gap-8 md:flex-row">
                                 <button className="hidden flex-col self-start items-center gap-2 p-2 text-text1 text-sm font-bold bg-background1 rounded-lg
                                 md:flex"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}</button>
-                                <div className="flex flex-col gap-2">
+                                <Link to={`/${suggestion.title}`} className="flex flex-col gap-2">
                                     <h2 className="text-text1 font-bold text-sm md:text-lg">{suggestion.title}</h2>
                                     <p className="text-slate-500 text-sm md:text-base">{suggestion.description}</p>
                                     <p className="w-fit px-4 py-1 text-text2 text-sm font-bold bg-background1 rounded-lg">{categoryToUpperCase}</p>
-                                </div>
-
+                                </Link>
+                    
                                 <div className="flex justify-between">
                                     <button className="flex items-center gap-2 px-4 py-1 text-text1 text-sm font-bold bg-background1 rounded-lg md:hidden"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}</button>
                                     <div className="flex items-center gap-2 md:hidden">

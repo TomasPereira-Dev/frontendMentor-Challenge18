@@ -53,7 +53,7 @@ const FeedbackBoard = () => {
     }, [mobileMenuIsOpen]);
 
     useEffect(()=> {
-        selectionHandler("Most Upvotes")
+        selectionHandler("Most Upvotes");
     }, [])
 
     return (

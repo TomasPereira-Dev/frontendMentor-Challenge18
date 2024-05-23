@@ -5,7 +5,7 @@ import data from "../../data.json";
 
 const DetailsPage = () => {
 
-    const [isReplyOpen, setIsReplyOpen] = useState(false); 
+    const [replyBtn, setReplyBtn] = useState(""); 
 
     const navigate = useNavigate();
     const {feedbackTitle} = useParams();
@@ -62,13 +62,13 @@ const DetailsPage = () => {
                                             <p className="text-xs text-slate-500">@{comment.user.username}</p>
                                         </div>
                                     </div>
-                                    <button id={comment.id} className="text-sm text-text2 font-bold">Reply</button>
+                                    <button id={`reply-btn-${comment.id}`} className="text-sm text-text2 font-bold" onClick={(e) => {setReplyBtn(e.target.id)}}>Reply</button>
                                 </div>
-                                <p className="text-sm text-slate-500">{comment.content}</p>
+                                <p className="text-sm text-slate-500 max-w-[64ch] md:ml-14">{comment.content}</p>
 
-                                <form className="flex flex-col mt-4" >
+                                <form  className={`${replyBtn.includes(comment.id) ? 'flex' : 'hidden'} flex-col mt-4 md:ml-14`} >
                                     <textarea className="p-6 my-4 text-sm bg-background1 rounded-lg border-none outline-1 outline-blue resize-none focus:outline" placeholder="Type your reply here" rows="2" maxLength="250"/>
-                                    <button className="px-4 py-3 text-sm text-white font-bold bg-purple rounded-lg">Post Reply</button>
+                                    <button className="px-4 py-3 text-sm text-white font-bold bg-purple rounded-lg md:self-end">Post Reply</button>
                                 </form>
                             </li>
                         )}

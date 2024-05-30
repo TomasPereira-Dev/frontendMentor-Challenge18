@@ -20,9 +20,9 @@ export default {
         "blue": "hsl(204, 94%, 68%)"
       },
       backgroundImage: {
-        "mobileHeaderBg": "url(./suggestions/mobile/background-header.png)",
-        "tabletHeaderBg": "url(./suggestions/tablet/background-header.png)",
-        "headerBg": "url(./suggestions/desktop/background-header.png)"
+        "mobileHeaderBg": "url('/suggestions/mobile/background-header.png')",
+        "tabletHeaderBg": "url('/suggestions/tablet/background-header.png')",
+        "headerBg": "url('/suggestions/desktop/background-header.png')"
       }
     },
   },

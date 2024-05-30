@@ -23,7 +23,7 @@ const DetailsPage = () => {
                             <span>Go back</span>
                         </button>
                     </div>
-                    <Link className="px-4 py-2 text-sm text-white font-bold bg-background3 rounded-lg" to="/"><p>Edit Feedback</p></Link>
+                    <Link className="px-4 py-2 text-sm text-white font-bold bg-background3 rounded-lg" to={`/edit/${suggestion[0].title}`}><p>Edit Feedback</p></Link>
                 </div>
                 <div className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8">
                     <div className="flex flex-col gap-8 md:flex-row">

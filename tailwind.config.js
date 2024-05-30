@@ -17,7 +17,8 @@ export default {
         "text2": "hsl(229, 76%, 58%)",
         "purple": "hsl(282, 83%, 52%)",
         "orange": "hsl(14, 84%, 74%)",
-        "blue": "hsl(204, 94%, 68%)"
+        "blue": "hsl(204, 94%, 68%)",
+        "red": "hsl(0, 67%, 53%)"
       },
       backgroundImage: {
         "mobileHeaderBg": "url('/suggestions/mobile/background-header.png')",

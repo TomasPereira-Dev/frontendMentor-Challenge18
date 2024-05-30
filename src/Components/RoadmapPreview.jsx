@@ -11,7 +11,7 @@ const RoadmapPreview = () => {
         <div className="flex flex-col gap-8 p-6 bg-white rounded-lg">
             <div className="flex justify-between items-center">
                 <h2 className="font-bold md:text-lg">Roadmap</h2>
-                <Link className="text-text2 hover:underline">View</Link>
+                <Link to="roadmap"  className="text-text2 hover:underline">View</Link>
             </div>
             <ul className="flex flex-col gap-2 text-slate-500">
                 <li className="flex justify-between items-center before:absolute before:content-[''] before:p-1 before:bg-orange before:rounded-full"><p className="ml-4">Planned</p> <p className="font-bold">{planned}</p></li>

@@ -7,18 +7,20 @@ import data from "../../data.json";
 
 const RoadmapPage = () => {
 
-    const [selectedFilter, setSelectedFilter] = useState("Planned");
+    const [selectedFilter, setSelectedFilter] = useState("planned");
 
     const plannedRef = useRef("");
-    const inProgressRef = useRef("");
-    const liveRef = useRef("");
 
-    const liveFeedback = data.productRequests.filter((feedback) => feedback.status === "live");
     const inProgressFeedback = data.productRequests.filter((feedback) => feedback.status === "in-progress");
     const plannedFeedback = data.productRequests.filter((feedback) => feedback.status === "planned");
+    const liveFeedback = data.productRequests.filter((feedback) => feedback.status === "live");
+
+    const plannedItems = plannedFeedback.map((item) => <RoadmapItem key={item.id} title={item.title} description={item.description} status={item.status} category={item.category} upvotes={item.upvotes} comments={item.comments} />);
+    const inProgressItems = inProgressFeedback.map((item) => <RoadmapItem key={item.id} title={item.title} description={item.description} status={item.status} category={item.category} upvotes={item.upvotes} comments={item.comments} />);
+    const liveItems = liveFeedback.map((item) => <RoadmapItem key={item.id} title={item.title} description={item.description} status={item.status} category={item.category} upvotes={item.upvotes} comments={item.comments} />);
 
     useEffect(() => { //default style for the buttons at first render.
-       if (selectedFilter.includes("Planned")){
+       if (selectedFilter.toLowerCase().includes("planned")){
         plannedRef.current.style.borderBottom = "4px solid hsl(14, 84%, 74%)";
        } else  {
         plannedRef.current.style.borderBottom = "none";
@@ -40,14 +42,35 @@ const RoadmapPage = () => {
                 </div>
             </nav>
             <div className="grid grid-cols-3 border-b"> 
-                <button className={`py-5 text-xs text-text1 font-bold ${selectedFilter.includes(plannedRef.current.textContent) ? 'border-b-4 border-orange' : null}`} ref={plannedRef} onClick={(e) => {setSelectedFilter(e.target.textContent)}}>Planned ({plannedFeedback.length})</button>
-                <button className={`py-5 text-xs text-text1 font-bold  ${selectedFilter.includes(inProgressRef.current.textContent) ? 'border-b-4 border-purple' : null}`} ref={inProgressRef} onClick={(e) => {setSelectedFilter(e.target.textContent)}}>In-Progress ({inProgressFeedback.length})</button>
-                <button className={`py-5 text-xs text-text1 font-bold  ${selectedFilter.includes(liveRef.current.textContent) ? 'border-b-4 border-blue' : null }`} ref={liveRef} onClick={(e) => {setSelectedFilter(e.target.textContent)}}>Live ({liveFeedback.length})</button>
+                <button ref={plannedRef} className={`py-5 text-xs text-text1 font-bold ${selectedFilter.includes("planned") ? 'border-b-4 border-orange' : null}`} onClick={() => {setSelectedFilter("planned")}}>Planned ({plannedFeedback.length})</button>
+                <button className={`py-5 text-xs text-text1 font-bold  ${selectedFilter.includes("in-progress") ? 'border-b-4 border-purple' : null}`} onClick={() => {setSelectedFilter("in-progress")}}>In-Progress ({inProgressFeedback.length})</button>
+                <button className={`py-5 text-xs text-text1 font-bold  ${selectedFilter.includes("live") ? 'border-b-4 border-blue' : null }`} onClick={() => {setSelectedFilter("live")}}>Live ({liveFeedback.length})</button>
             </div>
             <section className="grid p-6">
-                <ul>
-                    <RoadmapItem />
-                </ul>
+                <div className={selectedFilter === "planned" ? 'block' : 'hidden'}> 
+                    <h2 className="text-lg text-text1 font-bold">Planned ({plannedFeedback.length})</h2>
+                    <p className="mb-4 text-sm text-slate-500">Ideas prioritized for research</p>
+                    <ul className="flex flex-col gap-4">
+                        {plannedItems} 
+                    </ul>
+                </div>
+
+                <div className={selectedFilter === "in-progress" ? 'block' : 'hidden'}>
+                    <h2 className="text-lg text-text1 font-bold">In-Progress ({inProgressFeedback.length})</h2>
+                    <p className="mb-4 text-sm text-slate-500">Currently being developed</p>
+                    <ul className="flex flex-col gap-4">
+                        {inProgressItems}
+                    </ul>
+                </div>
+
+                <div className={selectedFilter === "live" ? 'block' : 'hidden'}>
+                    <h2 className="text-lg text-text1 font-bold">Live ({liveFeedback.length})</h2>
+                    <p className="mb-4 text-sm text-slate-500">Released features</p>
+                    <ul className="flex flex-col gap-4">
+                        {liveItems}
+                    </ul>
+                </div>
+
             </section>
         </main>
     )

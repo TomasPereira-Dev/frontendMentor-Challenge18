@@ -30,7 +30,7 @@ const RoadmapPage = () => {
     return(
         <main>
             <nav>
-                <div className="flex justify-between items-center p-6 bg-background2">
+                <div className="flex justify-between items-center p-6 bg-background2 lg:rounded-lg">
                     <div>
                         <Link to="/" className="flex gap-4 items-center">
                             <svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L2 5l4-4" stroke="#FFFFFF" strokeWidth="2" fill="none" fillRule="evenodd"/></svg>
@@ -41,13 +41,13 @@ const RoadmapPage = () => {
                     <AddFeedbackBtn />
                 </div>
             </nav>
-            <div className="grid grid-cols-3 border-b"> 
+            <div className="grid grid-cols-3 border-b lg:hidden"> 
                 <button ref={plannedRef} className={`py-5 text-xs text-text1 font-bold ${selectedFilter.includes("planned") ? 'border-b-4 border-orange' : null}`} onClick={() => {setSelectedFilter("planned")}}>Planned ({plannedFeedback.length})</button>
                 <button className={`py-5 text-xs text-text1 font-bold  ${selectedFilter.includes("in-progress") ? 'border-b-4 border-purple' : null}`} onClick={() => {setSelectedFilter("in-progress")}}>In-Progress ({inProgressFeedback.length})</button>
                 <button className={`py-5 text-xs text-text1 font-bold  ${selectedFilter.includes("live") ? 'border-b-4 border-blue' : null }`} onClick={() => {setSelectedFilter("live")}}>Live ({liveFeedback.length})</button>
             </div>
-            <section className="grid p-6">
-                <div className={selectedFilter === "planned" ? 'block' : 'hidden'}> 
+            <section className="grid grid-flow-col gap-6 p-6 lg:p-0 lg:mt-6">
+                <div className={`${selectedFilter === "planned" ? 'block' : 'hidden'} lg:block`}> 
                     <h2 className="text-lg text-text1 font-bold">Planned ({plannedFeedback.length})</h2>
                     <p className="mb-4 text-sm text-slate-500">Ideas prioritized for research</p>
                     <ul className="flex flex-col gap-4">
@@ -55,7 +55,7 @@ const RoadmapPage = () => {
                     </ul>
                 </div>
 
-                <div className={selectedFilter === "in-progress" ? 'block' : 'hidden'}>
+                <div className={`${selectedFilter === "in-progress" ? 'block' : 'hidden'} lg:block`}>
                     <h2 className="text-lg text-text1 font-bold">In-Progress ({inProgressFeedback.length})</h2>
                     <p className="mb-4 text-sm text-slate-500">Currently being developed</p>
                     <ul className="flex flex-col gap-4">
@@ -63,7 +63,7 @@ const RoadmapPage = () => {
                     </ul>
                 </div>
 
-                <div className={selectedFilter === "live" ? 'block' : 'hidden'}>
+                <div className={`${selectedFilter === "live" ? 'block' : 'hidden'} lg:block`}>
                     <h2 className="text-lg text-text1 font-bold">Live ({liveFeedback.length})</h2>
                     <p className="mb-4 text-sm text-slate-500">Released features</p>
                     <ul className="flex flex-col gap-4">

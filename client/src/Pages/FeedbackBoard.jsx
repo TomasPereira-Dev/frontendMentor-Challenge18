@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import MobileMenu from "../Components/MobileMenu.jsx";
 import AddFeedbackBtn from "../Components/AddFeedbackBtn.jsx";
 import LogoCard from "../Components/LogoCard.jsx";
@@ -52,8 +53,13 @@ const FeedbackBoard = () => {
         
     }, [mobileMenuIsOpen]);
 
-    useEffect(()=> {
+    useEffect(() => {
         selectionHandler("Most Upvotes");
+    }, [])
+
+    useEffect(() => {
+        axios.get("http://localhost:3000").
+        then(res => console.log(res))
     }, [])
 
     return (

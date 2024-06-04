@@ -58,7 +58,7 @@ const FeedbackBoard = () => {
     }, [])
 
     useEffect(() => {
-        axios.get("http://localhost:3000").
+        axios.get("https://frontend-mentor-challenge18-server.vercel.app/").
         then(res => console.log(res))
     }, [])
 

@@ -1,11 +1,16 @@
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
+
+
 const app = express();
 const port = 3000;
+const userData = __dirname + "/data.json";
 
-const userData = __dirname + "./data.json";
+app.use(cors());
+app.use(express.json());
 
 app.get("/", (req,res) =>  {
-    res.send(userData)
+    res.sendFile(userData)
 });
 
 app.listen(port, () => {

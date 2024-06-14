@@ -1,18 +1,19 @@
-const express = require('express');
-const cors = require('cors');
+const http = require("node:http");
 
+const selectedPort = process.env.POST ?? 3000;
 
-const app = express();
-const port = 3000;
-const userData = __dirname + "/data.json";
+const processRequest = (req, res) => {
+    if(req.url === "/"){
+        res.statusCode = 200;
+        res.setHeader("Content-Type" ,"text-plain");
+        res.end("hello, I'm mister frog, I love you");
+    }else{
+        req.statusCode = 404;
+    }
+};
 
-app.use(cors());
-app.use(express.json());
+const server = http.createServer(processRequest);
 
-app.get("/", (req,res) =>  {
-    res.sendFile(userData)
-});
-
-app.listen(port, () => {
-    console.log(`la app corre en localhost:${port}`)
+server.listen(selectedPort, () => {
+    console.log(`server is running on port http://localhost:${selectedPort}`)
 })

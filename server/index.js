@@ -1,19 +1,39 @@
-const http = require("node:http");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import "dotenv/config";
+import { connection } from "./database/MongoDB/connection.js";
+import { suggestionRouter } from "./routes/suggestionRouter.js";
+import { createRouter } from "./routes/createRouter.js";
+import { deleteRouter } from "./routes/deleteRouter.js";
+import { editRouter } from "./routes/editRouter.js";
 
-const selectedPort = process.env.POST ?? 3000;
 
-const processRequest = (req, res) => {
-    if(req.url === "/"){
-        res.statusCode = 200;
-        res.setHeader("Content-Type" ,"text-plain");
-        res.end("hello, I'm mister frog, I love you");
-    }else{
-        req.statusCode = 404;
-    }
-};
+dotenv.config();
+const app = express();
+const selectedPort = process.env.PORT ?? 3000;
 
-const server = http.createServer(processRequest);
+app.use(cors());
+app.use(express.json());
 
-server.listen(selectedPort, () => {
+app.use("/suggestions", suggestionRouter);
+app.use("/create_feedback", createRouter);
+app.use("/delete_feedback", deleteRouter);
+app.use("/edit_feedback", editRouter);
+
+
+app.disable("x-powered-by");
+
+
+export const db = connection(); 
+
+app.use((req, res) => {
+    res.status(404).send('<h1>404 not found</h1>');
+});
+
+app.listen(selectedPort, () => {
     console.log(`server is running on port http://localhost:${selectedPort}`)
-})
+});
+
+export default app;
+

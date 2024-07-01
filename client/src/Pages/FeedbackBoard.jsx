@@ -2,23 +2,27 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import useSWR from "swr";
 import MobileMenu from "../Components/MobileMenu.jsx";
 import AddFeedbackBtn from "../Components/AddFeedbackBtn.jsx";
 import LogoCard from "../Components/LogoCard.jsx";
 import Filter from "../Components/Filter.jsx";
 import RoadmapPreview from "../Components/RoadmapPreview.jsx";
-import data from "../../data.json";
+
 
 
 const FeedbackBoard = () => {
+
+    const fetcher = url => axios.get(url).then(res => res.data);
+    const  { data, isLoading, error } = useSWR("http://localhost:3000/suggestions", fetcher);
 
     const [selectedSort, setSelectedSort] = useState("Most Upvotes");
 
     const selectionHandler = (selection) => {
         setSelectedSort(selection);
 
-        const noCommentRequests = data.productRequests.filter((request) => !request.comments);
-        const commentedRequest = data.productRequests.filter((request) => request.comments);
+        const noCommentRequests = data ? data.filter((request) => !request.comments) : [];
+        const commentedRequest =  data ? data.filter((request) => request.comments) : [];
          
         switch(selection){
             case "Most Upvotes": 
@@ -58,9 +62,8 @@ const FeedbackBoard = () => {
     }, [])
 
     useEffect(() => {
-        axios.get("http://localhost:3000").
-        then(res => console.log(res))
-    }, [])
+        data ? setSuggestions(data) : setSuggestions([])
+    }, [data])
 
     return (
         <>
@@ -92,7 +95,7 @@ const FeedbackBoard = () => {
                     <div className="flex gap-4">
                         <div className="hidden items-center gap-2 md:flex">
                             <img src="./suggestions/icon-suggestions.svg" alt=" " />
-                            <p className="text-white font-bold text-lg">{suggestions.length} Suggestions</p>
+                            <p className="text-white font-bold text-lg">{suggestions ? suggestions.length : 0} Suggestions</p>
                         </div>
                         <div className="relative flex items-center gap-2 w-fit" onMouseEnter={() => {setDropdownIsOpen(true)}}>
                             <p className="text-white">Sort by: <span className="font-bold">{selectedSort}</span></p>

@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { Link ,useNavigate, useParams } from "react-router-dom";
-import data from "../../data.json";
-
+import axios from "axios";
+import useSWR from "swr";
 
 const DetailsPage = () => {
+
+    const fetcher = url => axios.get(url).then(res => res.data);
+    const  { data } = useSWR("http://localhost:3000/suggestions", fetcher);
 
     const [replyBtn, setReplyBtn] = useState(""); 
 
     const navigate = useNavigate();
     const {feedbackTitle} = useParams();
     
-    const suggestion = data.productRequests.filter((suggestion) => suggestion.title == feedbackTitle);
+    const suggestion = data.filter((suggestion) => suggestion.title == feedbackTitle);
     const categoryToUpperCase = suggestion[0].category.charAt(0).toUpperCase() + suggestion[0].category.slice(1);
 
     return(
@@ -29,7 +32,7 @@ const DetailsPage = () => {
                     <div className="flex flex-col gap-8 md:flex-row">
                         <button className="hidden flex-col self-start items-center gap-2 p-2 text-text1 text-sm font-bold bg-background1 rounded-lg
                         md:flex"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion[0].upvotes}</button>
-                        <Link to={`/${suggestion[0].title}`} className="flex flex-col gap-2">
+                        <Link to={`/${suggestion[0]._id}`} className="flex flex-col gap-2">
                             <h2 className="text-text1 font-bold text-sm md:text-lg">{suggestion[0].title}</h2>
                             <p className="text-slate-500 text-sm md:text-base">{suggestion[0].description}</p>
                             <p className="w-fit px-4 py-1 text-text2 text-sm font-bold bg-background1 rounded-lg">{categoryToUpperCase}</p>

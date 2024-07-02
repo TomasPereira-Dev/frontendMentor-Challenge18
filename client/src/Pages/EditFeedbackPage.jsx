@@ -1,7 +1,7 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState, useRef } from "react";
-
+import axios from "axios";
 
 
 const EditFeedbackPage = () => {
@@ -23,8 +23,30 @@ const EditFeedbackPage = () => {
     const {editFeedbackTitle} = useParams();
     const navigate = useNavigate();
 
-    const {register, handleSubmit, formState: { errors }} = useForm();
-    const onSubmit = (data) => console.log(data);
+    const {register, handleSubmit, getValues, formState: { errors }} = useForm({defaultValues: {category: "Feature", featureState: "Planned"}});
+
+    const onSubmit = async () => {
+        const values = getValues();
+        try{
+            axios.post("http://localhost:3000/edit_feedback", {
+                originalTitle: editFeedbackTitle,
+                title: values.feedbackTitle,
+                category: category.toLocaleLowerCase(),
+                status: featureState.toLocaleLowerCase(),
+                description: values.feedbackDescription
+            });
+        }catch (error){
+            console.log(error);  
+        }
+    };
+
+    const onDelete = async () => {
+        try{
+            axios.post("http://localhost:3000/delete_feedback", {originalTitle: editFeedbackTitle});
+        }catch (error){
+            console.log(error);  
+        }
+    };
 
     return(
         <main className="flex flex-col justify-center items-center h-dvh px-6 my-24">
@@ -53,7 +75,7 @@ const EditFeedbackPage = () => {
                             <div className="mb-2" >
                                 <h2 className="text-sm text-text1 font-bold md:text-base">Category</h2>
                                 <p className="text-sm text-slate-500">Choose a categoy for your feedback</p>
-                                <div className="relative px-4 py-3 w-full bg-background1 rounded-lg cursor-pointer" defaultValue={"Feature"} {...register("category")} onClick={() => {setDropdownIsOpen(!dropdownIsOpen)}}>
+                                <div className="relative px-4 py-3 w-full bg-background1 rounded-lg cursor-pointer" {...register("category")} onClick={() => {setDropdownIsOpen(!dropdownIsOpen)}}>
                                     <div className="flex justify-between items-center">
                                         <p className="text-text1 text-sm">{category}</p>
                                         <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4 4-4" stroke="#4661E6" strokeWidth="2" fill="none" fillRule="evenodd"/></svg>
@@ -72,7 +94,7 @@ const EditFeedbackPage = () => {
                             <div className="mb-2" >
                                 <h2 className="text-sm text-text1 font-bold md:text-base">Update Status</h2>
                                 <p className="text-sm text-slate-500">Change feature state</p>
-                                <div className="relative px-4 py-3 w-full bg-background1 rounded-lg cursor-pointer" defaultValue={"Planned"} {...register("feature-state")} onClick={() => {setFeatStateIsOpen(!featStateIsOpen)}}>
+                                <div className="relative px-4 py-3 w-full bg-background1 rounded-lg cursor-pointer"  {...register("featureState")} onClick={() => {setFeatStateIsOpen(!featStateIsOpen)}}>
                                     <div className="flex justify-between items-center">
                                         <p className="text-text1 text-sm">{featureState}</p>
                                         <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4 4-4" stroke="#4661E6" strokeWidth="2" fill="none" fillRule="evenodd"/></svg>
@@ -90,8 +112,8 @@ const EditFeedbackPage = () => {
                                 <h2 className="text-sm text-text1 font-bold md:text-base">Feedback Detail</h2>
                                 <p className="text-sm text-slate-500">Include any specific comments on what should be improved, added, etc.</p>
                             </div>
-                            <input className={`w-full px-4 py-3 text-sm bg-background1  rounded-lg ${errors.feedbackDetail ? 'outline outline-1 outline-red-500 caret-red-500' : 'outline-none'}`} {...register("feedbackDetail", {required: true, pattern: /\S/})} type="text" />
-                            {errors.feedbackDetail && <span className="text-sm text-red-500">this is required</span>}
+                            <input className={`w-full px-4 py-3 text-sm bg-background1  rounded-lg ${errors.feedbackDescription ? 'outline outline-1 outline-red-500 caret-red-500' : 'outline-none'}`} {...register("feedbackDescription", {required: true, pattern: /\S/})} type="text" />
+                            {errors.feedbackDescription && <span className="text-sm text-red-500">this is required</span>}
                         </div>
                     </form>  
                     <div className="grid grid-flow-row gap-4 md:grid-flow-col md:justify-between md:items-baseline">
@@ -100,7 +122,7 @@ const EditFeedbackPage = () => {
                             <Link className="px-4 py-3 text-white text-xs text-center font-bold bg-background2 rounded-lg" to="/" >Cancel</Link>
                         </div>
 
-                        <button className="px-4 py-3 text-white text-xs font-bold bg-red rounded-lg">Delete</button>
+                        <button className="px-4 py-3 text-white text-xs font-bold bg-red rounded-lg" type="button" onClick={() => { onDelete() }}>Delete</button>
                     </div>
                 </div>
             </div>

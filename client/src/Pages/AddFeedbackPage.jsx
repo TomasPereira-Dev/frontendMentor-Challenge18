@@ -18,7 +18,7 @@ const AddFeedbackPage = () => {
         try {
             const suggestion = await axios.post("http://localhost:3000/create_feedback", {
                 title: values.feedbackTitle,
-                category: category,
+                category: category.toLowerCase(),
                 upvotes: 0,
                 status: "suggestion",
                 description: values.feedbackDescription

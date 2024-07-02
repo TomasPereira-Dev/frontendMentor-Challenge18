@@ -14,7 +14,8 @@ import RoadmapPreview from "../Components/RoadmapPreview.jsx";
 const FeedbackBoard = () => {
 
     const fetcher = url => axios.get(url).then(res => res.data);
-    const  { data, isLoading, error } = useSWR("http://localhost:3000/suggestions", fetcher);
+    const  { data } = useSWR("http://localhost:3000/suggestions", fetcher);
+    console.log(data)
 
     const [selectedSort, setSelectedSort] = useState("Most Upvotes");
 
@@ -126,7 +127,7 @@ const FeedbackBoard = () => {
                     {suggestions.length ? suggestions.map((suggestion) => {
                            const categoryToUpperCase = suggestion.category.charAt(0).toUpperCase() + suggestion.category.slice(1);
                         return (
-                            <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion.id}>
+                            <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion._id}>
                             <div className="flex flex-col gap-8 md:flex-row">
                                 <button className="hidden flex-col self-start items-center gap-2 p-2 text-text1 text-sm font-bold bg-background1 rounded-lg
                                 md:flex"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}</button>

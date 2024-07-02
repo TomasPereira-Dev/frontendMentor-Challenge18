@@ -7,6 +7,7 @@ import { suggestionRouter } from "./routes/suggestionRouter.js";
 import { createRouter } from "./routes/createRouter.js";
 import { deleteRouter } from "./routes/deleteRouter.js";
 import { editRouter } from "./routes/editRouter.js";
+import { upvoteRouter } from "./routes/upvoteRouter.js";
 
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use("/suggestions", suggestionRouter);
 app.use("/create_feedback", createRouter);
 app.use("/delete_feedback", deleteRouter);
 app.use("/edit_feedback", editRouter);
+app.use("/upvote_feedback", upvoteRouter);
 
 
 app.disable("x-powered-by");

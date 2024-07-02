@@ -66,6 +66,13 @@ const FeedbackBoard = () => {
         data ? setSuggestions(data) : setSuggestions([])
     }, [data])
 
+    const upvoteHandler = async (title) => {
+        axios.post("http://localhost:3000/upvote_feedback", {
+            title: title,
+            upvotedBy: "currentUser"
+        })
+    }
+
     return (
         <>
         <header className={`flex justify-between items-center p-6 bg-mobileHeaderBg bg-cover md:hidden`}>
@@ -130,7 +137,9 @@ const FeedbackBoard = () => {
                             <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion._id}>
                             <div className="flex flex-col gap-8 md:flex-row">
                                 <button className="hidden flex-col self-start items-center gap-2 p-2 text-text1 text-sm font-bold bg-background1 rounded-lg
-                                md:flex"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}</button>
+                                md:flex" onClick={() => {upvoteHandler(suggestion.title)}}>   
+                                    <img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}
+                                </button>
                                 <Link to={`/${suggestion.title}`} className="flex flex-col gap-2">
                                     <h2 className="text-text1 font-bold text-sm md:text-lg">{suggestion.title}</h2>
                                     <p className="text-slate-500 text-sm md:text-base">{suggestion.description}</p>

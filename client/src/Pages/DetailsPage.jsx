@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link ,useNavigate, useParams } from "react-router-dom";
+import { Context } from "../Context/Context.jsx";
+import UpvoteBtn from "../Components/UpvoteBtn.jsx";
 import axios from "axios";
 import useSWR from "swr";
 
@@ -8,7 +10,10 @@ const DetailsPage = () => {
     const fetcher = url => axios.get(url).then(res => res.data);
     const  { data } = useSWR("http://localhost:3000/suggestions", fetcher);
 
-    const [replyBtn, setReplyBtn] = useState(""); 
+    const [replyBtn, setReplyBtn] = useState("");
+    const { image, username, name } = useContext(Context); 
+ 
+    console.log(image, name, username)
 
     const navigate = useNavigate();
     const {feedbackTitle} = useParams();
@@ -30,8 +35,7 @@ const DetailsPage = () => {
                 </div>
                 <div className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8">
                     <div className="flex flex-col gap-8 md:flex-row">
-                        <button className="hidden flex-col self-start items-center gap-2 p-2 text-text1 text-sm font-bold bg-background1 rounded-lg
-                        md:flex"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion[0].upvotes}</button>
+                        <UpvoteBtn suggestion={suggestion} isMobile={false}/>
                         <Link to={`/${suggestion[0]._id}`} className="flex flex-col gap-2">
                             <h2 className="text-text1 font-bold text-sm md:text-lg">{suggestion[0].title}</h2>
                             <p className="text-slate-500 text-sm md:text-base">{suggestion[0].description}</p>
@@ -39,7 +43,7 @@ const DetailsPage = () => {
                         </Link>
 
                         <div className="flex justify-between">
-                            <button className="flex items-center gap-2 px-4 py-1 text-text1 text-sm font-bold bg-background1 rounded-lg md:hidden"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion[0].upvotes}</button>
+                            <UpvoteBtn suggestion={suggestion} isMobile={true}/>
                             <div className="flex items-center gap-2 md:hidden">
                                 <img src="./shared/icon-comments.svg" alt=" " />
                                 <p className="text-sm font-bold">{suggestion[0].comments ? suggestion[0].comments.length : 0}</p>

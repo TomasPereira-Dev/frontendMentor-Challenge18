@@ -5,6 +5,7 @@ import axios from "axios";
 import useSWR from "swr";
 import MobileMenu from "../Components/MobileMenu.jsx";
 import AddFeedbackBtn from "../Components/AddFeedbackBtn.jsx";
+import UpvoteBtn from "../Components/UpvoteBtn.jsx";
 import LogoCard from "../Components/LogoCard.jsx";
 import Filter from "../Components/Filter.jsx";
 import RoadmapPreview from "../Components/RoadmapPreview.jsx";
@@ -66,12 +67,7 @@ const FeedbackBoard = () => {
         data ? setSuggestions(data) : setSuggestions([])
     }, [data])
 
-    const upvoteHandler = async (title) => {
-        axios.post("http://localhost:3000/upvote_feedback", {
-            title: title,
-            upvotedBy: "currentUser"
-        })
-    }
+
 
     return (
         <>
@@ -136,10 +132,7 @@ const FeedbackBoard = () => {
                         return (
                             <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion._id}>
                             <div className="flex flex-col gap-8 md:flex-row">
-                                <button className="hidden flex-col self-start items-center gap-2 p-2 text-text1 text-sm font-bold bg-background1 rounded-lg
-                                md:flex" onClick={() => {upvoteHandler(suggestion.title)}}>   
-                                    <img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}
-                                </button>
+                                <UpvoteBtn suggestion={suggestion} isMobile={false}/>
                                 <Link to={`/${suggestion.title}`} className="flex flex-col gap-2">
                                     <h2 className="text-text1 font-bold text-sm md:text-lg">{suggestion.title}</h2>
                                     <p className="text-slate-500 text-sm md:text-base">{suggestion.description}</p>
@@ -147,7 +140,7 @@ const FeedbackBoard = () => {
                                 </Link>
                     
                                 <div className="flex justify-between">
-                                    <button className="flex items-center gap-2 px-4 py-1 text-text1 text-sm font-bold bg-background1 rounded-lg md:hidden"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}</button>
+                                <UpvoteBtn suggestion={suggestion} isMobile={true}/>
                                     <div className="flex items-center gap-2 md:hidden">
                                         <img src="./shared/icon-comments.svg" alt=" " />
                                         <p className="text-sm font-bold">{suggestion.comments ? suggestion.comments.length : 0}</p>

@@ -1,10 +1,11 @@
 import { db } from "../index.js";
 import { Router } from "express";
+import { io } from "../index.js";
 
 const upvoteRouter = Router(); 
 
 upvoteRouter.post("/", async (req, res) => {
-    console.log("llamada a upvote_feedback", "request:", req)
+    console.log("llamada a upvote_feedback")
     try{
         const collection = (await db).collection("feedback").updateOne({title: req.body.title}, {$push: {upvotedBy: req.body.upvotedBy }, $inc: {upvotes: 1}});
         console.log(await collection)

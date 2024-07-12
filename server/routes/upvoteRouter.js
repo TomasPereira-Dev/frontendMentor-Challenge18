@@ -1,6 +1,5 @@
 import { db } from "../index.js";
 import { Router } from "express";
-import { io } from "../index.js";
 
 const upvoteRouter = Router(); 
 

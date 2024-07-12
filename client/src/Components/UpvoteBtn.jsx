@@ -1,12 +1,18 @@
 import axios from "axios";
+import { useContext } from "react";
+import { Context } from "../Context/Context";
 
 const UpvoteBtn = ({suggestion, isMobile}) => {
+
+    const {currentUser, socket} = useContext(Context);
 
     const upvoteHandler = async (title) => {
         axios.post("http://localhost:3000/upvote_feedback", {
             title: title,
             upvotedBy: "currentUser"
         });
+
+        await socket.emit("upvote", { currentUser });
     };
 
     if(!isMobile) return (

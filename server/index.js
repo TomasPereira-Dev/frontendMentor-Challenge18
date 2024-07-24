@@ -37,8 +37,21 @@ app.use((req, res) => {
 io.on("connection", (socket) => {
     console.log("a user has been connected", socket.id)
 
-    socket.on("upvote", (data) => {
-        socket.emit("upvote", console.log("a post has been upvoted!"))
+    socket.on("upvote", async (data) => {
+
+        const { currentUser, title, upvotedBy } = data;
+        const collection = (await db).collection("feedback");
+
+        if(upvotedBy.length >= 1 && upvotedBy.includes(currentUser.username)){
+            console.log("this user already upvoted this post")
+            const undoUpvote = await collection.updateOne({title: title}, {$pull: {upvotedBy: currentUser.username }, $inc: {upvotes: -1}});
+            socket.emit("unUpvotedSuggestion", `${currentUser.username} has undone his upvote to this post`)
+        }else{
+            console.log("this user never upvoted this post")
+            const upvote = await collection.updateOne({title: title}, {$push: {upvotedBy: currentUser.username }, $inc: {upvotes: 1}});
+            socket.emit("upvotedSuggestion", `a post has been upvoted by ${currentUser.username}`);
+        }
+        
     });
 
     socket.on("disconnect", () => {

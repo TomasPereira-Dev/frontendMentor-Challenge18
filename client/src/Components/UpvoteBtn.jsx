@@ -7,12 +7,14 @@ const UpvoteBtn = ({suggestion, isMobile}) => {
     const {currentUser, socket} = useContext(Context);
 
     const upvoteHandler = async (title) => {
-        axios.post("http://localhost:3000/upvote_feedback", {
-            title: title,
-            upvotedBy: "currentUser"
-        });
+        const upvotedBy = suggestion.upvotedBy ? suggestion.upvotedBy : [];
 
-        await socket.emit("upvote", { currentUser });
+        //axios.post("http://localhost:3000/upvote_feedback", {
+        //    title: title,
+        //    upvotedBy: currentUser
+        //});
+
+        await socket.emit("upvote", { currentUser, title, upvotedBy });
     };
 
     if(!isMobile) return (

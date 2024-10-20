@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import data from "../../data.json";
+import axios from "axios";
+import useSWR from "swr";
 
 const Filter = ({setSuggestions}) => {
+
+    const fetcher = url => axios.get(url).then(res => res.data);
+    const  { data } = useSWR("http://localhost:3000/suggestions", fetcher);
 
     const [selectedFilter, setSelectedFilter] = useState("All");
 
@@ -15,9 +19,9 @@ const Filter = ({setSuggestions}) => {
     const selectedFilterHandler = (filter) => {
         setSelectedFilter(filter);
         if(filter !== "All"){
-            setSuggestions(data.productRequests.filter((request) => request.category === filter.toLowerCase()));
+            setSuggestions(data.filter((request) => request.category === filter.toLowerCase()));
         }else{
-            setSuggestions(data.productRequests); 
+            setSuggestions(data); 
         }
     }
 

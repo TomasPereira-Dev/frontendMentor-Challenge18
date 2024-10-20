@@ -2,23 +2,29 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import useSWR from "swr";
 import MobileMenu from "../Components/MobileMenu.jsx";
 import AddFeedbackBtn from "../Components/AddFeedbackBtn.jsx";
+import UpvoteBtn from "../Components/UpvoteBtn.jsx";
 import LogoCard from "../Components/LogoCard.jsx";
 import Filter from "../Components/Filter.jsx";
 import RoadmapPreview from "../Components/RoadmapPreview.jsx";
-import data from "../../data.json";
+
 
 
 const FeedbackBoard = () => {
+
+    const fetcher = url => axios.get(url).then(res => res.data);
+    const  { data } = useSWR("http://localhost:3000/suggestions", fetcher);
+    console.log(data)
 
     const [selectedSort, setSelectedSort] = useState("Most Upvotes");
 
     const selectionHandler = (selection) => {
         setSelectedSort(selection);
 
-        const noCommentRequests = data.productRequests.filter((request) => !request.comments);
-        const commentedRequest = data.productRequests.filter((request) => request.comments);
+        const noCommentRequests = data ? data.filter((request) => !request.comments) : [];
+        const commentedRequest =  data ? data.filter((request) => request.comments) : [];
          
         switch(selection){
             case "Most Upvotes": 
@@ -58,9 +64,10 @@ const FeedbackBoard = () => {
     }, [])
 
     useEffect(() => {
-        axios.get("http://localhost:3000").
-        then(res => console.log(res))
-    }, [])
+        data ? setSuggestions(data) : setSuggestions([])
+    }, [data])
+
+
 
     return (
         <>
@@ -92,7 +99,7 @@ const FeedbackBoard = () => {
                     <div className="flex gap-4">
                         <div className="hidden items-center gap-2 md:flex">
                             <img src="./suggestions/icon-suggestions.svg" alt=" " />
-                            <p className="text-white font-bold text-lg">{suggestions.length} Suggestions</p>
+                            <p className="text-white font-bold text-lg">{suggestions ? suggestions.length : 0} Suggestions</p>
                         </div>
                         <div className="relative flex items-center gap-2 w-fit" onMouseEnter={() => {setDropdownIsOpen(true)}}>
                             <p className="text-white">Sort by: <span className="font-bold">{selectedSort}</span></p>
@@ -123,10 +130,9 @@ const FeedbackBoard = () => {
                     {suggestions.length ? suggestions.map((suggestion) => {
                            const categoryToUpperCase = suggestion.category.charAt(0).toUpperCase() + suggestion.category.slice(1);
                         return (
-                            <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion.id}>
+                            <li className="flex flex-col gap-6 p-6 bg-white rounded-lg md:flex-row md:justify-between md:p-8" key={suggestion._id}>
                             <div className="flex flex-col gap-8 md:flex-row">
-                                <button className="hidden flex-col self-start items-center gap-2 p-2 text-text1 text-sm font-bold bg-background1 rounded-lg
-                                md:flex"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}</button>
+                                <UpvoteBtn suggestion={suggestion} isMobile={false}/>
                                 <Link to={`/${suggestion.title}`} className="flex flex-col gap-2">
                                     <h2 className="text-text1 font-bold text-sm md:text-lg">{suggestion.title}</h2>
                                     <p className="text-slate-500 text-sm md:text-base">{suggestion.description}</p>
@@ -134,7 +140,7 @@ const FeedbackBoard = () => {
                                 </Link>
                     
                                 <div className="flex justify-between">
-                                    <button className="flex items-center gap-2 px-4 py-1 text-text1 text-sm font-bold bg-background1 rounded-lg md:hidden"><img src="./shared/icon-arrow-up.svg" alt=" " /> {suggestion.upvotes}</button>
+                                <UpvoteBtn suggestion={suggestion} isMobile={true}/>
                                     <div className="flex items-center gap-2 md:hidden">
                                         <img src="./shared/icon-comments.svg" alt=" " />
                                         <p className="text-sm font-bold">{suggestion.comments ? suggestion.comments.length : 0}</p>
